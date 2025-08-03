@@ -12,7 +12,7 @@ import Combine
 final class ChatViewModel: ObservableObject {
     @Published var messages: [Message]
     @Published var input = ""
-    @Published var isResponseLoading = false
+    @Published var isResponding = false
     
     private let repository: ChatRepository
     private let onDeviceLLMManager: OnDeviceLLMManager
@@ -47,6 +47,6 @@ extension ChatViewModel {
     private func subscribeToResponding() {
         onDeviceLLMManager.$isResponding
             .receive(on: DispatchQueue.main)
-            .assign(to: &$isResponseLoading)
+            .assign(to: &$isResponding)
     }
 }

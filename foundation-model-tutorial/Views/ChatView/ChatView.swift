@@ -36,7 +36,7 @@ struct ChatView: View {
                     ForEach(viewModel.messages) { message in
                         messageView(for: message)
                     }
-                    if viewModel.isResponseLoading {
+                    if viewModel.isResponding {
                         HStack {
                             ProgressView()
                             Spacer()
@@ -74,7 +74,7 @@ struct ChatView: View {
         }
         .padding(16)
         .background(Color(uiColor: .systemBackground))
-        .disabled(viewModel.isResponseLoading)
+        .disabled(viewModel.isResponding)
     }
 
     private func messageView(for message: Message) -> some View {
