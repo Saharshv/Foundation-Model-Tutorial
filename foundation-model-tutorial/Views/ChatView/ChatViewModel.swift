@@ -12,18 +12,14 @@ import Combine
 final class ChatViewModel: ObservableObject {
     @Published var messages: [Message]
     @Published var input = ""
-    @Published var isResponding = false
     
     private let repository: ChatRepository
-    private let onDeviceLLMManager: OnDeviceLLMManager
     
-    init(repository: ChatRepository, onDeviceLLMManager: OnDeviceLLMManager) {
+    init(repository: ChatRepository) {
         self.repository = repository
-        self.onDeviceLLMManager = onDeviceLLMManager
         self.messages = repository.messages
         
         self.subscribeToMessages()
-        self.subscribeToResponding()
     }
     
     func onSendTap() {
@@ -42,11 +38,5 @@ extension ChatViewModel {
         repository.$messages
             .receive(on: DispatchQueue.main)
             .assign(to: &$messages)
-    }
-    
-    private func subscribeToResponding() {
-        onDeviceLLMManager.$isResponding
-            .receive(on: DispatchQueue.main)
-            .assign(to: &$isResponding)
     }
 }

@@ -9,9 +9,8 @@ import SwiftUI
 
 struct ContentView: View {
     let repository: ChatRepository
-    let onDeviceLLMManager: OnDeviceLLMManager
     
     var body: some View {
-        ChatView(repository: repository, onDeviceLLMManager: onDeviceLLMManager)
+        ChatView(repository: repository)
     }
 }
