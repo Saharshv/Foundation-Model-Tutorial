@@ -11,8 +11,8 @@ struct ChatView: View {
     @StateObject var viewModel: ChatViewModel
     @FocusState private var isInputFocused: Bool
 
-    init(repository: ChatRepository) {
-        _viewModel = StateObject(wrappedValue: ChatViewModel(repository: repository))
+    init(repository: ChatRepository, onDeviceLLMManager: OnDeviceLLMManager) {
+        _viewModel = StateObject(wrappedValue: ChatViewModel(repository: repository, onDeviceLLMManager: onDeviceLLMManager))
     }
 
     var body: some View {
@@ -35,6 +35,12 @@ struct ChatView: View {
                 LazyVStack(spacing: 12) {
                     ForEach(viewModel.messages) { message in
                         messageView(for: message)
+                    }
+                    if viewModel.isResponseLoading {
+                        HStack {
+                            ProgressView()
+                            Spacer()
+                        }
                     }
                 }
                 .onAppear {
@@ -68,6 +74,7 @@ struct ChatView: View {
         }
         .padding(16)
         .background(Color(uiColor: .systemBackground))
+        .disabled(viewModel.isResponseLoading)
     }
 
     private func messageView(for message: Message) -> some View {

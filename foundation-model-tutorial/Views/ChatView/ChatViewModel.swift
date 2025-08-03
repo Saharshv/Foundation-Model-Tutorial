@@ -15,19 +15,22 @@ final class ChatViewModel: ObservableObject {
     @Published var isResponseLoading = false
     
     private let repository: ChatRepository
+    private let onDeviceLLMManager: OnDeviceLLMManager
     
-    init(repository: ChatRepository) {
+    init(repository: ChatRepository, onDeviceLLMManager: OnDeviceLLMManager) {
         self.repository = repository
+        self.onDeviceLLMManager = onDeviceLLMManager
         self.messages = repository.messages
         
         self.subscribeToMessages()
+        self.subscribeToResponding()
     }
     
     func onSendTap() {
         let content = input.trimmingCharacters(in: .whitespacesAndNewlines)
         guard content.isEmpty == false else { return }
         Task {
-            await repository.sendMessage(content)
+            repository.sendMessage(content)
             input.removeAll()
         }
     }
@@ -39,5 +42,11 @@ extension ChatViewModel {
         repository.$messages
             .receive(on: DispatchQueue.main)
             .assign(to: &$messages)
+    }
+    
+    private func subscribeToResponding() {
+        onDeviceLLMManager.$isResponding
+            .receive(on: DispatchQueue.main)
+            .assign(to: &$isResponseLoading)
     }
 }
